@@ -5,4 +5,4 @@
               {applications,[kernel,stdlib]},
               {mod,{ui_app,[]}},
               {env,[]},
-              {modules,[ui,ui_app,ui_linegraph,ui_sup]}]}.
+              {modules,[ui,ui_app,ui_bargraph,ui_graph,ui_linegraph,ui_sup]}]}.
