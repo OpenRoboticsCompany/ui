@@ -9,14 +9,11 @@ plot(Widget, [], _X, _Y, _Dx, _Dy, _Dm) ->
 
 plot(Widget,[D|Ds],X,Y,Dx,Dy,Dm) ->
 	W = ui:lineTo(Widget, round(X+Dx), round(Y + Dy*(D-Dm))),
-	io:format("line to ~p,~p~n", [ round(X+Dx), round(Y + Dy*(D-Dm))]),
 	plot(W,Ds,X+Dx,Y,Dx,Dy,Dm);
 
 plot(Widget,X,Y,Dx,Dy,Dm,{ { R, G, B, A }, [ D | Ds ]}) ->
-	io:format("~nnew line~n"),
 	Wp = ui:path(Widget),
 	Wc = ui:foreground(Wp,R,G,B,A),
-	io:format("color ~p,~p,~p,~p~n", [ R,G,B,A]),
 	Wm = ui:moveTo(Wc,X,round(Y + Dy*(D - Dm))),
 	plot(Wm,Ds,X,Y,Dx,Dy,Dm).
 	
