@@ -13,7 +13,8 @@ plot(Widget,[D|Ds],X,Y,Dx,Dy,Dm) ->
 	plot(Ws,Ds,X+Dx,Y,Dx,Dy,Dm).
 
 draw(X,Y,W,H,S,R,[ D | Ds ] = Data) ->
-	Wb = ui_graph:bounds([],X,Y,W,H),
+	Wp = ui:path([]),
+	Wb = ui_graph:bounds(Wp,X,Y,W,H),
 	Wh = ui_graph:hashes(Wb,X,Y,W,H,S,R),
 	Dx = W / length(Data),
 	Dmin = 0,
