@@ -1,7 +1,10 @@
 -module(ui).
 -author({ "David J Goehrig", "dave@dloh.org" }).
 -copyright(<<"© 2016 David J Goehrig"/utf8>>).
--export([ lineTo/3, moveTo/3, fill/3, clear/3, foreground/5, background/5, draw/1, blank/0 ]).
+-export([ lineTo/3, moveTo/3, fill/3, clear/3, foreground/5, background/5, draw/1, blank/0, path/1 ]).
+
+path(Widget) ->
+	Widget ++ [ <<"p">> ].
 
 lineTo(Widget,X,Y) ->
 	Widget ++ [ <<"l">>, X, Y ].

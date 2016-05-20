@@ -15,12 +15,19 @@ Renderer = function() {
 	}
 }
 
+
+// path
+Renderer.p = function () {
+	this.context.stroke()
+	this.context.beginPath()
+	return Array.prototype.slice.apply(arguments,[0])
+}
+
 // lineTo
 Renderer.l = function () {
 	this.x = arguments[0]
 	this.y = arguments[1]
 	this.context.lineTo(this.x,window.innerHeight - this.y)
-	this.context.stroke()
 	return Array.prototype.slice.apply(arguments,[2])
 }
 
