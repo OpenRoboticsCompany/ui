@@ -2,7 +2,7 @@
 -author({ "David J Goehrig", "dave@dloh.org" }).
 -copyright(<<"© 2016 David J Goehrig"/utf8>>).
 
--export([draw/6, animate/0]).
+-export([draw/3, animate/0]).
 
 plot(Widget, [], _X, _Y, _Dx, _Dy, _Dm) ->
 	Widget;
@@ -30,24 +30,28 @@ limits([ { _, Ds } | Rest ], Min, Max ) ->
 %
 %  [  { { r,g,b,a}, [ data ... ] }, ... ]
 
-draw(X,Y,W,H, {{ Rb,Gb,Bb,Ab }, S, R }, [ { _, D } | _  ] = Data) ->
-	Graph = ui:path([]),
+draw(Widget, {{ Rb,Gb,Bb,Ab }, S, R }, [ { _, D } | _  ] = Data) ->
+	{ X, Y, W, H } = ui:extent(Widget),
+	Graph = ui:path(Widget),
 	Wc = ui:foreground(Graph,Rb,Gb,Bb,Ab),
 	Wb = ui_graph:bounds(Wc,X,Y,W,H),
 	Wh = ui_graph:hashes(Wb,X,Y,W,H,S,R),
 	{ Dmin, Dmax } = limits(Data,0,0),
 	Dx = W / length(D),
 	Dy = H / (Dmax - Dmin),	
-	Wp = lists:foldl(fun(Line,Widget) -> plot(Widget,X,Y,Dx,Dy,Dmin,Line) end, Wh, Data),
+	Wp = lists:foldl(fun(Line,Wx) -> plot(Wx,X,Y,Dx,Dy,Dmin,Line) end, Wh, Data),
 	ui:path(Wp).
 
 
 animate(A,B,C) ->
-	ui:blank(),
-	ui:draw(draw(100,100,600,300,{{255,255,255,255},30,5},[
+	Widget = ui:widget(100,100,600,300),
+	Wbg = ui:background(Widget,0,0,0,255),
+	Wbl = ui:blank(Wbg),
+	Wdrawn = draw(Wbl,{{255,255,255,255},30,5},[
 		{ { 255,0,0,255}, A },
 		{ { 0,255,0,255}, B },
-		{ { 0,0, 255,255}, C }])),
+		{ { 0,0, 255,255}, C }]),
+	ui:draw(Wdrawn),
 	receive
 	after 100 ->
 		[ _ | As ] = A,
@@ -59,7 +63,6 @@ animate(A,B,C) ->
 	end.
 
 animate() ->
-	ui:draw(ui:background([],0,0,0,255)),
 	A = [ rand:uniform(10) || _X <- lists:seq(0,20) ],
 	B = [ rand:uniform(10) || _X <- lists:seq(0,20) ],
 	C = [ rand:uniform(10) || _X <- lists:seq(0,20) ],

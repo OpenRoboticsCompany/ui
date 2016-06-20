@@ -1,7 +1,14 @@
 -module(ui).
 -author({ "David J Goehrig", "dave@dloh.org" }).
 -copyright(<<"© 2016 David J Goehrig"/utf8>>).
--export([ lineTo/3, moveTo/3, fill/3, clear/3, foreground/5, background/5, draw/1, blank/0, path/1 ]).
+-export([ widget/4, extent/1, lineTo/3, moveTo/3, fill/3, clear/3, foreground/5, background/5, draw/1, blank/1, path/1 ]).
+
+widget(X,Y,W,H) ->
+	[ <<"w">>, X, Y, W, H ].
+
+extent(Widget) ->
+	[ <<"w">>, X, Y, W, H | _T ] = Widget,
+	{ X, Y, W, H }.
 
 path(Widget) ->
 	Widget ++ [ <<"p">> ].
@@ -25,8 +32,9 @@ background(Widget,R,G,B,A) ->
 	Widget ++ [ <<"bg">>, R, G, B, A ].
 	
 draw(Widget) ->
-	urelay_room:broadcast(ui_room, ujson:encode(Widget)).
+	urelay_room:broadcast(ui_room,null,ujson:encode(Widget)).
 
-blank() ->
-	draw(clear(moveTo([],0,0),1000,1000)).
+blank(Widget) ->
+	{ X, Y, W, H } = extent(Widget),
+	clear(moveTo(Widget,X,Y),W,H).
 	
